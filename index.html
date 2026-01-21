@@ -1,1 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
 
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vusal Sabirli | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --gold: #CBA35C; --bg: #000; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg); color: #fff; font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
+
+        .video-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #000; overflow: hidden; }
+        .video-bg iframe { position: absolute; top: 50%; left: 50%; width: 100vw; height: 177.77vw; min-height: 100vh; min-width: 56.25vh; transform: translate(-50%, -50%); pointer-events: none; opacity: 0.5; }
+
+        .social-sidebar { position: fixed; top: 20px; left: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 10001; }
+        .social-sidebar a { font-size: 22px; text-decoration: none; }
+        .fa-instagram { color: #E4405F; } .fa-tiktok { color: #fff; } .fa-youtube { color: #FF0000; } .fa-whatsapp { color: #25D366; }
+
+        .secret-admin { position: fixed; top: 0; right: 0; width: 60px; height: 60px; z-index: 9999; }
+        #adminPanel { display: none; position: fixed; top: 70px; right: 20px; background: rgba(0,0,0,0.95); border: 1px solid var(--gold); padding: 15px; border-radius: 10px; z-index: 10000; width: 220px; }
+        #adminPanel input, #adminPanel select { background: #111; border: 1px solid var(--gold); color: #fff; width: 100%; margin: 5px 0; padding: 8px; font-size: 11px; border-radius: 5px; }
+
+        .wrapper { width: 100%; max-width: 480px; margin: 0 auto; padding: 40px 15px; text-align: center; padding-bottom: 50px; position: relative; }
+        .logo { font-size: 32px; letter-spacing: 2px; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; color: #fff; }
+        .info-line { font-size: 17px; color: var(--gold); text-decoration: none; display: block; margin-bottom: 25px; font-weight: 700; letter-spacing: 0.5px; }
+        .bio-text { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.9); margin-bottom: 30px; padding: 0 10px; }
+        
+        .section-title { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--gold); margin: 30px 0 15px; font-style: italic; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .card { position: relative; min-height: 160px; border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: #111; display: flex; flex-direction: column; cursor: pointer; }
+        .card img, .card video { width: 100%; height: 140px; object-fit: cover; }
+        .cat-name { padding: 8px; font-size: 12px; font-weight: 600; color: var(--gold); text-transform: uppercase; background: #111; }
+        
+        .v-header { position: absolute; top: 8px; left: 8px; z-index: 10; display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 20px; pointer-events: none; width: calc(100% - 75px); }
+        .v-header-text { font-size: 10px; font-weight: 600; color: #fff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        .v-share { position: absolute; top: 10px; right: 10px; font-size: 16px; color: #fff; z-index: 1001; cursor: pointer; text-shadow: 1px 1px 2px #000; background: rgba(0,0,0,0.6); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        .v-del { position: absolute; top: 10px; right: 50px; font-size: 14px; color: #ff3040; z-index: 101; cursor: pointer; background: rgba(0,0,0,0.6); width: 32px; height: 32px; display: none; align-items: center; justify-content: center; border-radius: 50%; }
+
+        .insta-info { padding: 10px; text-align: left; background: #111; }
+        .action-row { display: flex; gap: 15px; margin-bottom: 5px; font-size: 20px; }
+        .active-red { color: #ff3040 !important; }
+
+        #commentModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 30000; padding: 15px; }
+        .modal-content { background: #111; border: 1px solid #333; border-radius: 15px; height: 85vh; display: flex; flex-direction: column; padding: 15px; max-width: 400px; margin: auto; position: relative; }
+        .close-comm { position: absolute; top: 10px; right: 15px; font-size: 24px; color: #fff; cursor: pointer; z-index: 30001; }
+        .blue-tick { color: #3897f0; font-size: 11px; margin-left: 3px; }
+        
+        .comment-item { border-bottom: 1px solid #222; padding: 15px 0; font-size: 13px; color: #fff; }
+        .comm-actions { display: flex; align-items: center; gap: 15px; margin-top: 8px; font-size: 12px; color: #bbb; }
+        .comm-actions i { cursor: pointer; font-size: 14px; }
+        .reaction-box { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .comm-del-btn { color: #ff3040; margin-left: auto; cursor: pointer; font-weight: 600; }
+
+        #albumView { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 20000; overflow-y: auto; padding: 20px; }
+        .close-btn { color: var(--gold); border: 1px solid var(--gold); background: none; padding: 8px 20px; border-radius: 50px; cursor: pointer; margin-bottom: 20px; }
+    </style>
+</head>
+<body onclick="enableAudio()">
+
+    <div class="social-sidebar">
+        <a href="https://www.instagram.com/vusalfilms" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@vusalfilms" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <a href="https://www.youtube.com/@vusalfilms" target="_blank"><i class="fab fa-youtube"></i></a>
+        <a href="https://wa.me/994776181886" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    </div>
+
+    <div class="video-bg">
+        <iframe id="bgVideo" src="https://www.youtube.com/embed/ogdEB-EI98w?autoplay=1&mute=1&loop=1&playlist=ogdEB-EI98w&controls=0&enablejsapi=1&rel=0" frameborder="0" allow="autoplay"></iframe>
+    </div>
+
+    <div class="secret-admin" onclick="adminAccess()"></div>
+
+    <div id="adminPanel">
+        <input type="text" id="vTitle" placeholder="Video Başlığı">
+        <select id="catSel">
+            <option value="toy">TOY</option><option value="nishan">NİŞAN</option><option value="adgunu">AD GÜNÜ</option>
+            <option value="party">PARTY</option><option value="xestaxana">XƏSTƏXANA</option><option value="dron">DRON</option>
+            <option value="korporativ">KORPORATİV</option>
+        </select>
+        <input type="file" id="up" accept="video/*" onchange="upload(event)">
+        <div id="upStatus" style="font-size:10px; color:var(--gold); margin-top:5px"></div>
+        <div style="cursor:pointer; color:var(--gold); margin-top:10px" onclick="closeAdmin()">Bağla</div>
+    </div>
+
+    <div class="wrapper">
+        <h1 class="logo">Vusal Sabirli</h1>
+        <a href="https://wa.me/994776181886" class="info-line">Info whatsapp @vusalflims tell +994776181886</a>
+        
+        <div id="hintText" style="font-size:11px; color:var(--gold); margin-bottom:15px; cursor:pointer">Səs üçün ekrana toxunun 🔊</div>
+        <p class="bio-text">
+            Rejissor, videoqraf və fotoqraf, 16 ildən artıqdır ki, canlı toy, korporativ və reklam çəkilişləri yaradırıq. 
+            Mənim yaradıcı baxışım və təfərrüata diqqətim hər bir çəkilişi əsil hekayəyə çevirir. <br><br>
+            Xoş günlərinizi unudulmaz yadda qalan olmasını istəyirsinizsə buyurun. Seçin seçilin🎥📸
+        </p>
+        
+        <h2 class="section-title">Portfellər</h2>
+        <div class="grid">
+            <div class="card" onclick="openAlbum('toy', 'Toy Portfeli')"><img src="https://i.ibb.co/LztS4G2g/image.jpg"><div class="cat-name">Toy</div></div>
+            <div class="card" onclick="openAlbum('nishan', 'Nişan Portfeli')"><img src="https://i.ibb.co/kshGD59y/image.jpg"><div class="cat-name">Nişan</div></div>
+            <div class="card" onclick="openAlbum('adgunu', 'Ad Günü Portfeli')"><img src="https://i.ibb.co/XrssJ0P2/image.jpg"><div class="cat-name">Ad Günü</div></div>
+            <div class="card" onclick="openAlbum('party', 'Party Portfeli')"><img src="https://i.ibb.co/vCjBBjzw/image.jpg"><div class="cat-name">Party</div></div>
+            <div class="card" onclick="openAlbum('xestaxana', 'Xəstəxana Portfeli')"><img src="https://i.ibb.co/YHmb6jD/image.jpg"><div class="cat-name">Xəstəxana</div></div>
+            <div class="card" onclick="openAlbum('dron', 'Dron Xidmətləri')"><img src="https://i.ibb.co/KcQFsGWW/image.jpg"><div class="cat-name">Dron</div></div>
+            <div class="card" onclick="openAlbum('korporativ', 'Korporativ Portfeli')"><img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=500&auto=format&fit=crop"><div class="cat-name">Korporativ</div></div>
+        </div>
+        <div class="footer-note">© Qorunur - VusalFilms 2026</div>
+    </div>
+
+    <div id="albumView">
+        <button class="close-btn" onclick="closeAlbum()">⬅ Geri</button>
+        <h2 id="albumTitle" class="section-title"></h2>
+        <div class="grid" id="albumGrid"></div>
+    </div>
+
+    <div id="commentModal">
+        <div class="modal-content">
+            <span class="close-comm" onclick="closeComm()">&times;</span>
+            <div id="mBody" style="overflow-y:auto; flex-grow:1; margin-top:30px; padding: 10px;"></div>
+            <div style="display:flex; gap:5px; padding: 10px; border-top: 1px solid #222;">
+                <input type="text" id="cName" placeholder="Ad" style="width:30%; background:#000; color:#fff; border:1px solid #333; padding:8px; border-radius:5px; font-size:12px;">
+                <input type="text" id="cTxt" placeholder="Şərh..." style="width:55%; background:#000; color:#fff; border:1px solid #333; padding:8px; border-radius:5px; font-size:12px;">
+                <button onclick="sendComm()" style="width:15%; color:var(--gold); border:none; background:none; font-weight:bold; cursor:pointer;">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let db, activeVid, isAdmin = false;
+        let currentCategory = '';
+
+        // YADDAŞI 50GB-A QALDIRMAQ ÜÇÜN PERSISTENT STORAGE TƏLƏBİ
+        async function requestStorage() {
+            if (navigator.storage && navigator.storage.persist) {
+                await navigator.storage.persist();
+            }
+        }
+
+        const req = indexedDB.open("VusalFilmsSuperDB", 170); 
+        req.onupgradeneeded = e => {
+            db = e.target.result;
+            if(!db.objectStoreNames.contains("gallery")) {
+                const store = db.createObjectStore("gallery", { keyPath: "id", autoIncrement: true });
+                store.createIndex("category", "category", { unique: false });
+            }
+        };
+        req.onsuccess = e => {
+            db = e.target.result;
+            requestStorage();
+        };
+
+        function openAlbum(cat, title) {
+            currentCategory = cat;
+            document.getElementById('albumView').style.display = 'block';
+            document.getElementById('albumTitle').innerText = title;
+            renderGallery();
+        }
+
+        function renderGallery() {
+            const grid = document.getElementById('albumGrid'); grid.innerHTML = '';
+            if(!db) return;
+            const tx = db.transaction("gallery","readonly").objectStore("gallery").index("category");
+            tx.openCursor(IDBKeyRange.only(currentCategory)).onsuccess = e => {
+                const c = e.target.result;
+                if(c) {
+                    const item = c.value;
+                    const shareLink = `https://wa.me/994776181886?text=` + encodeURIComponent(`Salam Vusal Bey. Bu video Haqqinda maraglanmaq isteyirik: ${item.title}`);
+                    const div = document.createElement('div'); div.className='card';
+                    div.innerHTML = `
+                        <div class="v-header"><span class="v-header-text">VusalSabirli <i class="fas fa-check-circle blue-tick"></i> • ${item.title}</span></div>
+                        <div class="v-del" style="display:${isAdmin?'flex':'none'}" onclick="event.stopPropagation(); deleteVideo(${item.id})"><i class="fas fa-trash"></i></div>
+                        <div class="v-share" onclick="event.stopPropagation(); window.open('${shareLink}', '_blank')"><i class="fas fa-paper-plane"></i></div>
+                        <video src="${item.data}" controls onplay="view(${item.id}, this)"></video>
+                        <div class="insta-info">
+                            <div class="action-row">
+                                <i class="far fa-comment" onclick="openComm(${item.id})" style="cursor:pointer"></i>
+                                <i class="fas fa-heart ${item.vLiked?'active-red':''}" onclick="vLike(${item.id},this)" style="cursor:pointer"></i>
+                            </div>
+                            <div style="font-size:12px; font-weight:bold;"><span class="v-cnt">${item.views||0}</span> baxış • <span class="l-cnt">${item.vLikes||0}</span> bəyənmə</div>
+                        </div>`;
+                    grid.prepend(div); c.continue();
+                }
+            };
+        }
+
+        function view(id, el) {
+            const tx = db.transaction("gallery","readwrite");
+            const s = tx.objectStore("gallery");
+            s.get(id).onsuccess = e => {
+                const d = e.target.result;
+                if(!el.dataset.viewed) {
+                    d.views = (d.views || 0) + 1;
+                    s.put(d);
+                    el.closest('.card').querySelector('.v-cnt').innerText = d.views;
+                    el.dataset.viewed = "true";
+                }
+            };
+        }
+
+        function openComm(id) { activeVid = id; document.getElementById('commentModal').style.display='block'; loadComm(); }
+        function closeComm() { document.getElementById('commentModal').style.display='none'; }
+        
+        function loadComm() {
+            db.transaction("gallery").objectStore("gallery").get(activeVid).onsuccess = e => {
+                const item = e.target.result;
+                document.getElementById('mBody').innerHTML = (item.comments||[]).map((c,i)=>`
+                    <div class="comment-item">
+                        <b>${c.n}${c.n==='VusalSabirli'?' <i class="fas fa-check-circle blue-tick"></i>':''}</b> ${c.t}
+                        <div class="comm-actions">
+                            <div class="reaction-box" onclick="cReaction(${i}, 'like')">
+                                <i class="fas fa-thumbs-up ${c.liked?'active-red':''}"></i>
+                                <span style="font-weight:bold">${c.likes||0}</span>
+                            </div>
+                            <div class="reaction-box" onclick="cReaction(${i}, 'dislike')">
+                                <i class="fas fa-thumbs-down ${c.disliked?'active-red':''}"></i>
+                                <span style="font-weight:bold">${c.dislikes||0}</span>
+                            </div>
+                            <span onclick="reply(${i},'${c.n}')">Yanıtla</span>
+                            <span class="comm-del-btn" onclick="deleteComm(${i})" style="display:${isAdmin?'block':'none'}">Sil</span>
+                        </div>
+                    </div>`).join('');
+            };
+        }
+
+        function cReaction(idx, type) {
+            const tx = db.transaction("gallery","readwrite"); const s = tx.objectStore("gallery");
+            s.get(activeVid).onsuccess = e => {
+                const d = e.target.result; 
+                const c = d.comments[idx];
+                if(type === 'like') {
+                    c.liked = !c.liked;
+                    c.likes = c.liked ? (c.likes||0)+1 : Math.max(0,(c.likes||0)-1);
+                    if(c.liked) { c.disliked = false; c.dislikes = Math.max(0, (c.dislikes||0)-1); }
+                } else {
+                    c.disliked = !c.disliked;
+                    c.dislikes = c.disliked ? (c.dislikes||0)+1 : Math.max(0,(c.dislikes||0)-1);
+                    if(c.disliked) { c.liked = false; c.likes = Math.max(0, (c.likes||0)-1); }
+                }
+                s.put(d);
+                tx.oncomplete = () => loadComm();
+            };
+        }
+
+        function sendComm() {
+            const n = document.getElementById('cName').value || "Qonaq", t = document.getElementById('cTxt').value;
+            if(!t) return;
+            const tx = db.transaction("gallery","readwrite"); const s = tx.objectStore("gallery");
+            s.get(activeVid).onsuccess = e => {
+                const d = e.target.result; if(!d.comments) d.comments=[];
+                d.comments.push({n, t, likes:0, liked:false, dislikes:0, disliked:false});
+                s.put(d); tx.oncomplete = () => { document.getElementById('cTxt').value=''; loadComm(); };
+            };
+        }
+
+        function deleteComm(idx) {
+            if(!isAdmin) return;
+            const tx = db.transaction("gallery","readwrite"); const s = tx.objectStore("gallery");
+            s.get(activeVid).onsuccess = e => { 
+                const d = e.target.result; 
+                d.comments.splice(idx,1); 
+                s.put(d); 
+                tx.oncomplete = () => loadComm(); 
+            };
+        }
+
+        // 5 DEQIQE LIMIT VE YADDAŞ OPTIMIZASIYASI ILE YUKLEME
+        function upload(ev) {
+            const f = ev.target.files[0]; if(!f) return;
+            const status = document.getElementById('upStatus');
+            const video = document.createElement('video');
+            video.preload = 'metadata';
+
+            video.onloadedmetadata = function() {
+                window.URL.revokeObjectURL(video.src);
+                // 5 DƏQİQƏ LİMİT (300 SANİYƏ)
+                if (video.duration > 300) {
+                    status.style.color = "red";
+                    status.innerText = "Səhv: Video 5 dəqiqədən çoxdur!";
+                    return;
+                }
+
+                status.style.color = "var(--gold)";
+                status.innerText = "Yüklənir (1080p uyğun)...";
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const tx = db.transaction("gallery", "readwrite");
+                    tx.objectStore("gallery").add({
+                        category: document.getElementById('catSel').value,
+                        title: document.getElementById('vTitle').value || "Video",
+                        data: e.target.result, views: 0, vLikes: 0, comments: []
+                    });
+                    tx.oncomplete = () => { status.innerText = "Tamamlandı!"; renderGallery(); };
+                    tx.onerror = () => { status.innerText = "Yaddaş doludur!"; };
+                };
+                reader.readAsDataURL(f);
+            };
+            video.src = URL.createObjectURL(f);
+        }
+
+        function vLike(id, el) {
+            const tx = db.transaction("gallery","readwrite"); const s = tx.objectStore("gallery");
+            s.get(id).onsuccess = e => {
+                const d = e.target.result; d.vLiked = !d.vLiked;
+                d.vLikes = d.vLiked ? (d.vLikes||0)+1 : Math.max(0,(d.vLikes||0)-1);
+                s.put(d); el.classList.toggle('active-red'); el.closest('.insta-info').querySelector('.l-cnt').innerText = d.vLikes;
+            };
+        }
+
+        function deleteVideo(id) {
+            if(!confirm("Silinsin?")) return;
+            const tx = db.transaction("gallery","readwrite");
+            tx.objectStore("gallery").delete(id);
+            tx.oncomplete = () => renderGallery();
+        }
+
+        function reply(i, n) { document.getElementById('cTxt').value = `@${n} `; document.getElementById('cTxt').focus(); }
+        function closeAlbum() { document.getElementById('albumView').style.display='none'; }
+        function adminAccess() { if(prompt("Şifrə:")==="Vusal2025") { isAdmin = true; document.getElementById('adminPanel').style.display='block'; renderGallery(); } }
+        function closeAdmin() { isAdmin = false; document.getElementById('adminPanel').style.display='none'; renderGallery(); }
+        function enableAudio() { document.getElementById('bgVideo').contentWindow.postMessage('{"event":"command","func":"unMute","args":""}','*'); document.getElementById('hintText').style.display='none'; }
+    </script>
+</body>
+</html>
+    
+  </body>
+  
+</html>
