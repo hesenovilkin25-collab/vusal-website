@@ -35,7 +35,11 @@
 
         .wrapper { width: 100%; max-width: 480px; margin: 0 auto; padding: 40px 15px; text-align: center; padding-bottom: 50px; position: relative; }
         .logo { font-size: 32px; letter-spacing: 2px; font-weight: 600; text-transform: uppercase; margin-bottom: 10px; color: #fff; }
-        .info-line { font-size: 17px; color: var(--gold); text-decoration: none; display: block; margin-bottom: 25px; font-weight: 700; letter-spacing: 0.5px; }
+        
+        .info-box { font-size: 16px; color: var(--gold); margin-bottom: 25px; line-height: 1.5; }
+        .info-box span { display: block; font-weight: 700; letter-spacing: 0.5px; }
+        .booking-link { color: var(--gold); text-decoration: none; font-weight: 700; }
+
         .bio-text { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.9); margin-bottom: 30px; padding: 0 10px; }
         
         .section-title { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--gold); margin: 30px 0 15px; font-style: italic; }
@@ -60,7 +64,8 @@
         .close-comm { position: absolute; top: 10px; right: 15px; font-size: 24px; color: #fff; cursor: pointer; z-index: 30001; }
         .blue-tick { color: #3897f0; font-size: 11px; margin-left: 3px; }
         
-        .comment-item { border-bottom: 1px solid #222; padding: 15px 0; font-size: 13px; color: #fff; }
+        .comment-item { border-bottom: 1px solid #222; padding: 12px 0; font-size: 13px; color: #fff; }
+        .comm-time { font-size: 10px; color: #777; margin-left: 8px; }
         .comm-actions { display: flex; align-items: center; gap: 15px; margin-top: 8px; font-size: 12px; color: #bbb; }
         .comm-actions i { cursor: pointer; font-size: 14px; }
         .reaction-box { display: flex; align-items: center; gap: 5px; cursor: pointer; }
@@ -99,8 +104,11 @@
 
     <div class="wrapper">
         <h1 class="logo">Vusal Sabirli</h1>
-        <a href="https://wa.me/994776181886" class="info-line">Info whatsapp @vusalflims tell +994776181886</a>
-        
+        <div class="info-box">
+            <span>Wedding Event Videographer & Photographer</span>
+            <a href="https://wa.me/994776181886" class="booking-link">For booking @vusalfilms (+994776181886)</a>
+        </div>
+
         <div id="hintText" style="font-size:11px; color:var(--gold); margin-bottom:15px; cursor:pointer">Səs üçün ekrana toxunun 🔊</div>
         <p class="bio-text">
             Rejissor, videoqraf və fotoqraf, 16 ildən artıqdır ki, canlı toy, korporativ və reklam çəkilişləri yaradırıq. 
@@ -143,11 +151,20 @@
         let db, activeVid, isAdmin = false;
         let currentCategory = '';
 
-        // YADDAŞI 50GB-A QALDIRMAQ ÜÇÜN PERSISTENT STORAGE TƏLƏBİ
+        function timeAgo(date) {
+            const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+            if (seconds < 60) return "indi";
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) return minutes + "dəq";
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return hours + "saat";
+            const days = Math.floor(hours / 24);
+            if (days < 7) return days + "gün";
+            return Math.floor(days / 7) + "həftə";
+        }
+
         async function requestStorage() {
-            if (navigator.storage && navigator.storage.persist) {
-                await navigator.storage.persist();
-            }
+            if (navigator.storage && navigator.storage.persist) await navigator.storage.persist();
         }
 
         const req = indexedDB.open("VusalFilmsSuperDB", 170); 
@@ -158,10 +175,7 @@
                 store.createIndex("category", "category", { unique: false });
             }
         };
-        req.onsuccess = e => {
-            db = e.target.result;
-            requestStorage();
-        };
+        req.onsuccess = e => { db = e.target.result; requestStorage(); };
 
         function openAlbum(cat, title) {
             currentCategory = cat;
@@ -178,13 +192,16 @@
                 const c = e.target.result;
                 if(c) {
                     const item = c.value;
-                    const shareLink = `https://wa.me/994776181886?text=` + encodeURIComponent(`Salam Vusal Bey. Bu video Haqqinda maraglanmaq isteyirik: ${item.title}`);
+                    // WHATSAPP MESAJI YENİLƏNDİ
+                    const waText = `Salam Vusal Bey Necesiz Bu Videoda Isteyirik? \nVideo: ${item.title}`;
+                    const shareLink = `https://wa.me/994776181886?text=` + encodeURIComponent(waText);
+                    
                     const div = document.createElement('div'); div.className='card';
                     div.innerHTML = `
                         <div class="v-header"><span class="v-header-text">VusalSabirli <i class="fas fa-check-circle blue-tick"></i> • ${item.title}</span></div>
                         <div class="v-del" style="display:${isAdmin?'flex':'none'}" onclick="event.stopPropagation(); deleteVideo(${item.id})"><i class="fas fa-trash"></i></div>
                         <div class="v-share" onclick="event.stopPropagation(); window.open('${shareLink}', '_blank')"><i class="fas fa-paper-plane"></i></div>
-                        <video src="${item.data}" controls onplay="view(${item.id}, this)"></video>
+                        <video src="${item.data}" onclick="playFull(this, ${item.id})" playsinline></video>
                         <div class="insta-info">
                             <div class="action-row">
                                 <i class="far fa-comment" onclick="openComm(${item.id})" style="cursor:pointer"></i>
@@ -197,6 +214,15 @@
             };
         }
 
+        function playFull(v, id) {
+            v.controls = true;
+            if (v.requestFullscreen) v.requestFullscreen();
+            else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+            else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+            v.play();
+            view(id, v);
+        }
+
         function view(id, el) {
             const tx = db.transaction("gallery","readwrite");
             const s = tx.objectStore("gallery");
@@ -205,13 +231,22 @@
                 if(!el.dataset.viewed) {
                     d.views = (d.views || 0) + 1;
                     s.put(d);
-                    el.closest('.card').querySelector('.v-cnt').innerText = d.views;
+                    const card = el.closest('.card');
+                    if(card) card.querySelector('.v-cnt').innerText = d.views;
                     el.dataset.viewed = "true";
                 }
             };
         }
 
-        function openComm(id) { activeVid = id; document.getElementById('commentModal').style.display='block'; loadComm(); }
+        function openComm(id) { 
+            activeVid = id; 
+            document.getElementById('commentModal').style.display='block'; 
+            const nameInput = document.getElementById('cName');
+            if(isAdmin) { nameInput.value = "VusalSabirli"; nameInput.readOnly = true; } 
+            else { nameInput.value = ""; nameInput.readOnly = false; }
+            loadComm(); 
+        }
+
         function closeComm() { document.getElementById('commentModal').style.display='none'; }
         
         function loadComm() {
@@ -219,7 +254,9 @@
                 const item = e.target.result;
                 document.getElementById('mBody').innerHTML = (item.comments||[]).map((c,i)=>`
                     <div class="comment-item">
-                        <b>${c.n}${c.n==='VusalSabirli'?' <i class="fas fa-check-circle blue-tick"></i>':''}</b> ${c.t}
+                        <b>${c.n}${c.n==='VusalSabirli'?' <i class="fas fa-check-circle blue-tick"></i>':''}</b>
+                        <span class="comm-time">${timeAgo(c.date || new Date())}</span>
+                        <div style="margin-top:4px">${c.t}</div>
                         <div class="comm-actions">
                             <div class="reaction-box" onclick="cReaction(${i}, 'like')">
                                 <i class="fas fa-thumbs-up ${c.liked?'active-red':''}"></i>
@@ -239,8 +276,7 @@
         function cReaction(idx, type) {
             const tx = db.transaction("gallery","readwrite"); const s = tx.objectStore("gallery");
             s.get(activeVid).onsuccess = e => {
-                const d = e.target.result; 
-                const c = d.comments[idx];
+                const d = e.target.result; const c = d.comments[idx];
                 if(type === 'like') {
                     c.liked = !c.liked;
                     c.likes = c.liked ? (c.likes||0)+1 : Math.max(0,(c.likes||0)-1);
@@ -250,18 +286,18 @@
                     c.dislikes = c.disliked ? (c.dislikes||0)+1 : Math.max(0,(c.dislikes||0)-1);
                     if(c.disliked) { c.liked = false; c.likes = Math.max(0, (c.likes||0)-1); }
                 }
-                s.put(d);
-                tx.oncomplete = () => loadComm();
+                s.put(d); tx.oncomplete = () => loadComm();
             };
         }
 
         function sendComm() {
-            const n = document.getElementById('cName').value || "Qonaq", t = document.getElementById('cTxt').value;
+            const n = document.getElementById('cName').value || "Qonaq";
+            const t = document.getElementById('cTxt').value;
             if(!t) return;
             const tx = db.transaction("gallery","readwrite"); const s = tx.objectStore("gallery");
             s.get(activeVid).onsuccess = e => {
                 const d = e.target.result; if(!d.comments) d.comments=[];
-                d.comments.push({n, t, likes:0, liked:false, dislikes:0, disliked:false});
+                d.comments.push({n, t, date: new Date().toISOString(), likes:0, liked:false, dislikes:0, disliked:false});
                 s.put(d); tx.oncomplete = () => { document.getElementById('cTxt').value=''; loadComm(); };
             };
         }
@@ -270,31 +306,19 @@
             if(!isAdmin) return;
             const tx = db.transaction("gallery","readwrite"); const s = tx.objectStore("gallery");
             s.get(activeVid).onsuccess = e => { 
-                const d = e.target.result; 
-                d.comments.splice(idx,1); 
-                s.put(d); 
-                tx.oncomplete = () => loadComm(); 
+                const d = e.target.result; d.comments.splice(idx,1); s.put(d); tx.oncomplete = () => loadComm(); 
             };
         }
 
-        // 5 DEQIQE LIMIT VE YADDAŞ OPTIMIZASIYASI ILE YUKLEME
         function upload(ev) {
             const f = ev.target.files[0]; if(!f) return;
             const status = document.getElementById('upStatus');
             const video = document.createElement('video');
             video.preload = 'metadata';
-
             video.onloadedmetadata = function() {
                 window.URL.revokeObjectURL(video.src);
-                // 5 DƏQİQƏ LİMİT (300 SANİYƏ)
-                if (video.duration > 300) {
-                    status.style.color = "red";
-                    status.innerText = "Səhv: Video 5 dəqiqədən çoxdur!";
-                    return;
-                }
-
-                status.style.color = "var(--gold)";
-                status.innerText = "Yüklənir (1080p uyğun)...";
+                if (video.duration > 300) { status.innerText = "Səhv: Video 5 dəq-dən çoxdur!"; return; }
+                status.innerText = "Yüklənir...";
                 const reader = new FileReader();
                 reader.onload = e => {
                     const tx = db.transaction("gallery", "readwrite");
@@ -304,7 +328,6 @@
                         data: e.target.result, views: 0, vLikes: 0, comments: []
                     });
                     tx.oncomplete = () => { status.innerText = "Tamamlandı!"; renderGallery(); };
-                    tx.onerror = () => { status.innerText = "Yaddaş doludur!"; };
                 };
                 reader.readAsDataURL(f);
             };

@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2026 GAMES YT (https://codepen.io/GAMES-YT/pen/wBWeqNG)
+Copyright (c) 2026 GAMES YT (https://codepen.io/GAMES-YT/pen/VYjMmxJ)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
